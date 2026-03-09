@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Fuck, Marry, Kill</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Nunito:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --red: #e63946;
+    --pink: #ff4d6d;
+    --dark: #0d0d0d;
+    --card-bg: #ffffff;
+    --gold: #ffd60a;
+    --white: #ffffff;
+  }
+
+  body {
+    font-family: 'Nunito', sans-serif;
+    background-color: #ffffff;
+    color: #000000;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    overflow-x: hidden;
+  }
+
+  /* ── SCREENS ── */
+  .screen {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    max-width: 480px;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 24px 16px;
+  }
+
+  .screen.hidden { display: none; }
+
+  /* ── HOME SCREEN ── */
+  #home-screen {
+    gap: 75px;
+    text-align: center;
+  }
+
+  .home-deco {
+    font-size: 56px;
+    line-height: 1;
+  }
+
+  .home-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(52px, 16vw, 80px);
+    line-height: 0.9;
+    letter-spacing: 2px;
+    color: #000000;
+  }
+
+  /* ── BUTTONS ── */
+  .btn {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 30px;
+    letter-spacing: 3px;
+    padding: 16px 56px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .btn:active { transform: none; }
+
+  .btn-primary {
+    background: linear-gradient(135deg, var(--red), var(--pink));
+    color: #ffffff;
+    box-shadow: none;
+  }
+
+  .btn-primary:hover {
+    box-shadow: none;
+  }
+
+  .btn-next {
+    background: linear-gradient(135deg, var(--red), var(--pink));
+    color: #ffffff;
+    box-shadow: none;
+    font-size: 26px;
+    padding: 14px 48px;
+    margin-top: 8px;
+  }
+
+  .btn-next:hover {
+    box-shadow: none;
+  }
+
+  /* ── GAME SCREEN ── */
+  #game-screen {
+    gap: 16px;
+    justify-content: flex-start;
+    padding-top: 32px;
+    padding-bottom: 32px;
+  }
+
+  .game-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(32px, 10vw, 48px);
+    letter-spacing: 2px;
+    color: #000000;
+    text-align: center;
+  }
+
+  /* ── CARD GRID ── */
+  .card-grid {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .card-row {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+  }
+
+  .card-row.single { justify-content: center; }
+
+  /* top row: 2 cards side by side */
+  .card-row.double .card { width: calc(45% - 6px); }
+
+  /* bottom row: 1 card centered, same width as one top card */
+  .card-row.single .card { width: calc(45% - 6px); }
+
+  .card {
+    background: transparent;
+    border-radius: 0;
+    overflow: visible;
+    border: none;
+    box-shadow: none;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .card-img-wrap {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    overflow: hidden;
+    background: #ddd;
+    flex-shrink: 0;
+    border: 5px solid #000000;
+    border-radius: 10px;
+  }
+
+  .card-img-wrap img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: top center;
+    display: block;
+  }
+
+  .card-name {
+    padding: 6px 4px 0;
+    text-align: center;
+    line-height: 1.25;
+    width: 100%;
+  }
+
+  .card-name .name-main {
+    font-weight: 900;
+    font-size: clamp(11px, 3.5vw, 15px);
+    color: #000000;
+    display: block;
+  }
+
+  .card-name .name-sub {
+    font-size: clamp(9px, 2.8vw, 12px);
+    color: rgba(0,0,0,0.5);
+    display: block;
+    margin-top: 2px;
+  }
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════ HOME ═══════════════════════════ -->
+<div class="screen" id="home-screen">
+  <div>
+    <h1 class="home-title">Fuck,<br>Marry,<br>Kill</h1>
+  </div>
+  <button class="btn btn-primary" onclick="startGame()">START</button>
+</div>
+
+<!-- ═══════════════════════════ GAME ═══════════════════════════ -->
+<div class="screen hidden" id="game-screen">
+  <h1 class="game-title">Fuck, Marry, Kill</h1>
+
+  <div class="card-grid" id="card-grid">
+    <!-- top row -->
+    <div class="card-row double" id="top-row">
+      <div class="card" id="card-0">
+        <div class="card-img-wrap"><img id="img-0" src="" alt=""></div>
+        <div class="card-name"><span class="name-main" id="name-main-0"></span><span class="name-sub" id="name-sub-0"></span></div>
+      </div>
+      <div class="card" id="card-1">
+        <div class="card-img-wrap"><img id="img-1" src="" alt=""></div>
+        <div class="card-name"><span class="name-main" id="name-main-1"></span><span class="name-sub" id="name-sub-1"></span></div>
+      </div>
+    </div>
+    <!-- bottom row -->
+    <div class="card-row single" id="bot-row">
+      <div class="card" id="card-2">
+        <div class="card-img-wrap"><img id="img-2" src="" alt=""></div>
+        <div class="card-name"><span class="name-main" id="name-main-2"></span><span class="name-sub" id="name-sub-2"></span></div>
+      </div>
+    </div>
+  </div>
+
+  <button class="btn btn-next" onclick="nextRound()">NEXT</button>
+</div>
+
+<script>
+// ─── CHARACTER DATA ───────────────────────────────────────────
+// Each entry: { file: "filename.ext", main: "Display Name", sub: "subtitle or empty" }
+// sub is shown in smaller text below (for bracket content)
+
+const characters = [
+  // Batch 1
+  { file:"Ada.jpg",                        main:"Ada",                sub:"" },
+  { file:"Jack Wolfe.jpg",                 main:"Jack Wolfe",         sub:"" },
+  { file:"Kunigami.jpg",                   main:"Kunigami",           sub:"" },
+  { file:"Genya.jpg",                      main:"Genya",              sub:"" },
+  { file:"Kyle.jpg",                       main:"Kyle",               sub:"" },
+  { file:"Jabber.jpg",                     main:"Jabber",             sub:"" },
+  { file:"Enjin.jpg",                      main:"Enjin",              sub:"" },
+  { file:"Zanka.jpg",                      main:"Zanka",              sub:"" },
+  { file:"Tamsy.jpg",                      main:"Tamsy",              sub:"" },
+  { file:"Leon.jpg",                       main:"Leon",               sub:"" },
+  { file:"Hugo.jpg",                       main:"Hugo",               sub:"" },
+  { file:"Sae.jpeg",                       main:"Sae",                sub:"" },
+  { file:"Kaiser.jpeg",                    main:"Kaiser",             sub:"" },
+  { file:"Mavis.jpeg",                     main:"Mavis",              sub:"" },
+  { file:"GoGo.jpeg",                      main:"GoGo",               sub:"" },
+  { file:"Chishiya.jpeg",                  main:"Chishiya",           sub:"" },
+  { file:"Niragi.jpeg",                    main:"Niragi",             sub:"" },
+  { file:"Kenma.jpeg",                     main:"Kenma",              sub:"" },
+  { file:"Felix.jpeg",                     main:"Felix",              sub:"" },
+  { file:"Seon Ok.jpeg",                   main:"Seon Ok",            sub:"" },
+  // Batch 2
+  { file:"Grizz.jpeg",                     main:"Grizz",              sub:"" },
+  { file:"Alicia.jpeg",                    main:"Alicia",             sub:"" },
+  { file:"Robin.jpeg",                     main:"Robin",              sub:"" },
+  { file:"Rikki.jpg",                      main:"Rikki",              sub:"" },
+  { file:"Frei.jpeg",                      main:"Frei",               sub:"" },
+  { file:"Beomgyu.jpeg",                   main:"Beomgyu",            sub:"" },
+  { file:"Anna.jpeg",                      main:"Anna",               sub:"" },
+  { file:"Poppy.jpeg",                     main:"Poppy",              sub:"" },
+  { file:"Gressil.jpeg",                   main:"Gressil",            sub:"" },
+  { file:"Azriel.jpg",                     main:"Azriel",             sub:"" },
+  { file:"Diego.jpeg",                     main:"Diego",              sub:"" },
+  { file:"Gareth.jpeg",                    main:"Gareth",             sub:"" },
+  { file:"Fynn.jpeg",                      main:"Fynn",               sub:"" },
+  { file:"Min Ho.jpeg",                    main:"Min Ho",             sub:"" },
+  { file:"Rin.jpeg",                       main:"Rin",                sub:"" },
+  { file:"Lee Joo Young.jpeg",             main:"Lee Joo Young",      sub:"" },
+  { file:"Mulan.jpeg",                     main:"Mulan",              sub:"" },
+  { file:"Zarina.jpeg",                    main:"Zarina",             sub:"" },
+  { file:"Peter Parker.jpeg",              main:"Peter Parker",       sub:"" },
+  { file:"Jirou.jpeg",                     main:"Jirou",              sub:"" },
+  // Batch 3
+  { file:"Joshua.jpeg",                    main:"Joshua",             sub:"" },
+  { file:"Denki.jpeg",                     main:"Denki",              sub:"" },
+  { file:"Sukuna.jpeg",                    main:"Sukuna",             sub:"" },
+  { file:"Jude Bellingham.jpeg",           main:"Jude Bellingham",    sub:"" },
+  { file:"Michael B. Jordan.jpeg",         main:"Michael B. Jordan",  sub:"" },
+  { file:"Grimmjow.jpeg",                  main:"Grimmjow",           sub:"" },
+  { file:"Uraraka.jpeg",                   main:"Uraraka",            sub:"" },
+  { file:"Nicolas.jpeg",                   main:"Nicolas",            sub:"" },
+  { file:"Raven.jpeg",                     main:"Raven",              sub:"" },
+  { file:"Hiccup.jpeg",                    main:"Hiccup",             sub:"" },
+  { file:"Nick.jpeg",                      main:"Nick",               sub:"" },
+  { file:"Barou.jpeg",                     main:"Barou",              sub:"" },
+  { file:"Daniel.JPG",                     main:"Daniel",             sub:"" },
+  { file:"Daniele.JPG",                    main:"Daniele",            sub:"" },
+  { file:"Periwinkle.jpeg",                main:"Periwinkle",         sub:"" },
+  { file:"Elsa.jpeg",                      main:"Elsa",               sub:"" },
+  { file:"Wendy.jpeg",                     main:"Wendy",              sub:"" },
+  { file:"Marshall.jpeg",                  main:"Marshall",           sub:"" },
+  { file:"Marceline.jpeg",                 main:"Marceline",          sub:"" },
+  { file:"Captain Barnacles.jpeg",         main:"Captain Barnacles",  sub:"" },
+  // Batch 4
+  { file:"Astrid.jpeg",                    main:"Astrid",             sub:"" },
+  { file:"Robin (2).jpeg",                 main:"Robin",              sub:"" },
+  { file:"Mitsuya.jpeg",                   main:"Mitsuya",            sub:"" },
+  { file:"Rin (2).jpeg",                   main:"Rin",                sub:"" },
+  { file:"Mirko.jpeg",                     main:"Mirko",              sub:"" },
+  { file:"Bakugo.jpeg",                    main:"Bakugo",             sub:"" },
+  { file:"Garou.jpeg",                     main:"Garou",              sub:"" },
+  { file:"Orihime.jpeg",                   main:"Orihime",            sub:"" },
+  { file:"Rangiku.jpeg",                   main:"Rangiku",            sub:"" },
+  { file:"Aizen.jpeg",                     main:"Aizen",              sub:"" },
+  { file:"Sanemi.jpeg",                    main:"Sanemi",             sub:"" },
+  { file:"Akaza.jpeg",                     main:"Akaza",              sub:"" },
+  { file:"Toji.jpeg",                      main:"Toji",               sub:"" },
+  { file:"Choso.jpeg",                     main:"Choso",              sub:"" },
+  { file:"Hyun Yi.jpeg",                   main:"Hyun Yi",            sub:"" },
+  { file:"Mikey.jpeg",                     main:"Mikey",              sub:"" },
+  { file:"Juan.jpeg",                      main:"Juan",               sub:"" },
+  { file:"Semi.jpeg",                      main:"Semi",               sub:"" },
+  { file:"Camilo.jpeg",                    main:"Camilo",             sub:"" },
+  { file:"Ekko.jpeg",                      main:"Ekko",               sub:"" },
+  // Batch 5
+  { file:"Ena.jpeg",                       main:"Ena",                sub:"" },
+  { file:"Inumaki.jpeg",                   main:"Inumaki",            sub:"" },
+  { file:"Muichiro.jpeg",                  main:"Muichiro",           sub:"" },
+  { file:"Miya.jpeg",                      main:"Miya",               sub:"" },
+  { file:"Bobbie.png",                     main:"Bobbie",             sub:"" },
+  { file:"Leighton.jpeg",                  main:"Leighton",           sub:"" },
+  { file:"Joon Wook.jpeg",                 main:"Joon Wook",          sub:"" },
+  { file:"Charles.jpeg",                   main:"Charles",            sub:"" },
+  { file:"Hiro.jpeg",                      main:"Hiro",               sub:"" },
+  { file:"Miles G. Morales.jpeg",          main:"Miles G. Morales",   sub:"" },
+];
+
+// ─── HELPERS ─────────────────────────────────────────────────
+function pickThree() {
+  const pool = [...Array(characters.length).keys()];
+  const picked = [];
+  while (picked.length < 3) {
+    const randIndex = Math.floor(Math.random() * pool.length);
+    picked.push(pool.splice(randIndex, 1)[0]);
+  }
+  return picked.map(i => characters[i]);
+}
+
+function setCard(index, char) {
+  document.getElementById(`img-${index}`).src = `images/${char.file}`;
+  document.getElementById(`img-${index}`).alt = char.main;
+  document.getElementById(`name-main-${index}`).textContent = char.main;
+  document.getElementById(`name-sub-${index}`).textContent = char.sub;
+}
+
+function refreshCards() {
+  const three = pickThree();
+  three.forEach((char, i) => setCard(i, char));
+}
+
+// ─── SCREEN TRANSITIONS ──────────────────────────────────────
+function startGame() {
+  document.getElementById('home-screen').classList.add('hidden');
+  document.getElementById('game-screen').classList.remove('hidden');
+  refreshCards();
+}
+
+function nextRound() {
+  refreshCards();
+}
+</script>
+</body>
+</html>
